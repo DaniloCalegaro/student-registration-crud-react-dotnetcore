@@ -1,4 +1,5 @@
-# Student egistration
+# Registro de Aluno
+
 ![GitHub repo size](https://img.shields.io/github/repo-size/DaniloCalegaro/student-registration-crud-react-dotnetcore)
 
 🚀 Em construção...
