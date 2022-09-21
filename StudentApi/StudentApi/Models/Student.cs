@@ -1,9 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace StudentApi.Models
-{
-    public class Student
-    {
+namespace StudentApi.Models {
+    public class Student {
         public int Id { get; set; }
         [Required]
         [StringLength(80)]
