@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StudentApi.Context;
+using StudentApi.Services;
 
 class Startup {
     public Startup(IConfiguration configuration) {
@@ -11,6 +12,8 @@ class Startup {
         services.AddDbContext<AppDbContext>(options => {
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
         });
+
+        services.AddScoped<IStudentService, StudentsService>(); 
 
         services.AddControllers();
         services.AddEndpointsApiExplorer();
@@ -25,5 +28,11 @@ class Startup {
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "StudentsApi v1"));
         }
+
+        app.UseHttpsRedirection();
+        app.UseRouting();
+        app.UseAuthorization();
+        app.UseEndpoints(endpoints => endpoints.MapControllers());
+                
     }
 }
