@@ -1,14 +1,18 @@
+import { toast } from 'react-toastify'
+import { api } from '../services/api'
 import { AddressBook } from 'phosphor-react'
 import { useEffect, useState } from 'react'
 import { ModalAddStudant } from '../components/ModalAddStudant'
-import { api } from '../services/api'
 import { Student } from '../types'
+import { ModalEditStudant } from '../components/ModalEditStudant'
 
 export type AddStudent = Omit<Student, 'id'>
 
 export function Dashboard() {
   const [students, setStudents] = useState<Student[]>([])
+  const [editingStudent, setEditingStudent] = useState<Student>({} as Student)
   const [modalOpenAddStudant, setOpenModalAddStudent] = useState(false)
+  const [modalOpenEditStudant, setOpenModalEditStudent] = useState(false)
 
   useEffect(() => {
     async function getStudents() {
@@ -23,18 +27,50 @@ export function Dashboard() {
 
   async function handleAddStudent(student: AddStudent) {
     try {
-      // const response = await api.post('/students', {
-      //   student
-      // })
-      // setStudents([...students, response.data])
-      console.log(student)
+      const response = await api.post('/students', {
+        ...student
+      })
+      setStudents([...students, response.data])
+      //toast.success('Aluno adicionado')
     } catch (err) {
       console.log(err)
+      toast.success('Falha durante o processo')
     }
   }
 
-  const toggleModal = () => {
+  async function handleRemoveStudent(studentId: number) {
+    try {
+      const response = await api.delete(`students/${studentId}`)
+      const updateStudent = [...students]
+      const studentIndex = updateStudent.findIndex(
+        student => student.id === studentId
+      )
+      if (studentIndex >= 0) {
+        updateStudent.splice(studentIndex, 1)
+        setStudents(updateStudent)
+        //toast.success(response.data)
+      } else {
+        throw Error()
+      }
+    } catch (err) {
+      toast.success('Falha durante o processo')
+    }
+    //console.log(productId)
+  }
+
+  async function handleUpdateStudent(student: Student) {}
+
+  async function handleEditStudent(student: Student) {
+    setEditingStudent(student)
+    setOpenModalEditStudent(true)
+  }
+
+  function toggleModalAdd() {
     setOpenModalAddStudent(!modalOpenAddStudant)
+  }
+
+  function toggleModalEdit() {
+    setOpenModalEditStudent(!modalOpenEditStudant)
   }
 
   return (
@@ -43,7 +79,7 @@ export function Dashboard() {
       <h3 className="text-center">Cadastro de Alunos</h3>
       <header className="mb-3">
         <AddressBook size={48} />
-        <button className="btn btn-success" onClick={toggleModal}>
+        <button className="btn btn-success" onClick={toggleModalAdd}>
           Incluir Novo Aluno
         </button>
       </header>
@@ -65,10 +101,18 @@ export function Dashboard() {
               <td>{student.email}</td>
               <td>{student.age}</td>
               <td className="d-flex ">
-                <button className="btn btn-primary btn-sm me-1 w-100">
+                <button
+                  className="btn btn-primary btn-sm me-1 w-100"
+                  onClick={() => handleEditStudent(student)}
+                >
                   Editar
                 </button>
-                <button className="btn btn-danger btn-sm w-100">Excluir</button>
+                <button
+                  className="btn btn-danger btn-sm w-100"
+                  onClick={() => handleRemoveStudent(student.id)}
+                >
+                  Excluir
+                </button>
               </td>
             </tr>
           ))}
@@ -77,8 +121,15 @@ export function Dashboard() {
 
       <ModalAddStudant
         isOpen={modalOpenAddStudant}
-        setIsOpen={toggleModal}
+        setIsOpen={toggleModalAdd}
         handleAddStudent={handleAddStudent}
+      />
+
+      <ModalEditStudant
+        isOpen={modalOpenEditStudant}
+        setIsOpen={toggleModalEdit}
+        editingStudent={editingStudent}
+        handleUpdateStudent={handleUpdateStudent}
       />
     </div>
   )
