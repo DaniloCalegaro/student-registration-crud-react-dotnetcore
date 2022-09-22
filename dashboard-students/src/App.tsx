@@ -1,3 +1,10 @@
+import 'bootstrap/dist/css/bootstrap.min.css'
+import { Dashboard } from './pages/Dashboard'
+
 export default function App() {
-  return <h1>Ola</h1>
+  return (
+    <>
+      <Dashboard />
+    </>
+  )
 }

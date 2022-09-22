@@ -20,6 +20,7 @@ class Startup {
         services.AddSwaggerGen(c => {
             c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "StudentsAPI", Version = "v1" });
         });
+
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment environment) {
@@ -28,6 +29,14 @@ class Startup {
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "StudentsApi v1"));
         }
+        
+        //** Restringe apenas ao local da aplicação fronte end
+        app.UseCors(options => {
+            options.WithOrigins("http://localhost:5173"); 
+            options.AllowAnyMethod();
+            options.AllowAnyHeader();
+        });
+        //**
 
         app.UseHttpsRedirection();
         app.UseRouting();
