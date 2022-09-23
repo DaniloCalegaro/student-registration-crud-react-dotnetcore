@@ -27,9 +27,7 @@ export function Dashboard() {
 
   async function handleAddStudent(student: AddStudent) {
     try {
-      const response = await api.post('/students', {
-        ...student
-      })
+      const response = await api.post('/students', student)
       setStudents([...students, response.data])
     } catch (err) {
       console.log(err)
@@ -57,9 +55,7 @@ export function Dashboard() {
 
   async function handleUpdateStudent(student: Student) {
     try {
-      const response = await api.put(`/students/${student.id}`, {
-        ...student
-      })
+      const response = await api.put(`/students/${student.id}`, student)
 
       const studentsUpdated = students.map(s =>
         s.id !== student.id ? s : student
