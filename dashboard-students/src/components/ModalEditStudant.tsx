@@ -1,6 +1,5 @@
-import { ChangeEvent, FormEvent, useState } from 'react'
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react'
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
-import { AddStudent } from '../pages/Dashboard'
 import { Student } from '../types'
 
 interface ModalEditStudantProps {
@@ -16,12 +15,27 @@ export function ModalEditStudant({
   editingStudent,
   handleUpdateStudent
 }: ModalEditStudantProps) {
+  const [id, setId] = useState(0)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [age, setAge] = useState(0)
 
+  useEffect(() => {
+    setId(editingStudent.id)
+    setName(editingStudent.name)
+    setEmail(editingStudent.email)
+    setAge(editingStudent.age)
+  }, [editingStudent])
+
   async function handleSubmit(event: FormEvent) {
     event.preventDefault()
+    const newValuesStudent = { id, name, email, age }
+    handleUpdateStudent(newValuesStudent)
+    setIsOpen()
+  }
+
+  function handleClose() {
+    setIsOpen()
   }
 
   return (
@@ -35,6 +49,7 @@ export function ModalEditStudant({
               type="text"
               className="form-control"
               id="name"
+              defaultValue={editingStudent.name}
               required
               onChange={(event: ChangeEvent<HTMLInputElement>) =>
                 setName(event.target.value)
@@ -47,6 +62,7 @@ export function ModalEditStudant({
               type="email"
               className="form-control"
               id="email"
+              defaultValue={editingStudent.email}
               required
               onChange={(event: ChangeEvent<HTMLInputElement>) =>
                 setEmail(event.target.value)
@@ -59,6 +75,7 @@ export function ModalEditStudant({
               type="number"
               className="form-control"
               id="age"
+              defaultValue={editingStudent.age}
               required
               onChange={(event: ChangeEvent<HTMLInputElement>) =>
                 setAge(Number(event.target.value))
@@ -71,7 +88,11 @@ export function ModalEditStudant({
           <button type="submit" className="btn btn-primary">
             Incluir
           </button>
-          <button className="btn btn-danger" onClick={setIsOpen}>
+          <button
+            type="button"
+            className="btn btn-danger"
+            onClick={handleClose}
+          >
             Cancelar
           </button>
         </ModalFooter>

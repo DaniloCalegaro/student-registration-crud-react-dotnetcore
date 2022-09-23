@@ -31,10 +31,9 @@ export function Dashboard() {
         ...student
       })
       setStudents([...students, response.data])
-      //toast.success('Aluno adicionado')
     } catch (err) {
       console.log(err)
-      toast.success('Falha durante o processo')
+      toast.error('Falha durante o processo')
     }
   }
 
@@ -48,17 +47,29 @@ export function Dashboard() {
       if (studentIndex >= 0) {
         updateStudent.splice(studentIndex, 1)
         setStudents(updateStudent)
-        //toast.success(response.data)
       } else {
         throw Error()
       }
     } catch (err) {
-      toast.success('Falha durante o processo')
+      toast.error('Falha durante o processo')
     }
-    //console.log(productId)
   }
 
-  async function handleUpdateStudent(student: Student) {}
+  async function handleUpdateStudent(student: Student) {
+    try {
+      const response = await api.put(`/students/${student.id}`, {
+        ...student
+      })
+
+      const studentsUpdated = students.map(s =>
+        s.id !== student.id ? s : student
+      )
+
+      setStudents(studentsUpdated)
+    } catch (err) {
+      toast.error('Falha durante o processo')
+    }
+  }
 
   async function handleEditStudent(student: Student) {
     setEditingStudent(student)
@@ -72,6 +83,7 @@ export function Dashboard() {
   function toggleModalEdit() {
     setOpenModalEditStudent(!modalOpenEditStudant)
   }
+  //console.log(modalOpenEditStudant)
 
   return (
     <div className="ms-5 me-5">
