@@ -6,13 +6,13 @@ import { Student } from '../types'
 interface ModalAddStudantProps {
   isOpen: boolean
   setIsOpen: () => void
-  handleAddStudent: (student: AddStudent) => void
+  addStudent: (student: AddStudent) => void
 }
 
 export function ModalAddStudant({
   isOpen,
   setIsOpen,
-  handleAddStudent
+  addStudent
 }: ModalAddStudantProps) {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -20,11 +20,7 @@ export function ModalAddStudant({
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault()
-
-    handleAddStudent({ name, email, age })
-    setName('')
-    setEmail('')
-    setAge(0)
+    addStudent({ name, email, age })
     setIsOpen()
   }
 

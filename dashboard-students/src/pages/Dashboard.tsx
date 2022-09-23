@@ -5,14 +5,19 @@ import { useEffect, useState } from 'react'
 import { ModalAddStudant } from '../components/ModalAddStudant'
 import { Student } from '../types'
 import { ModalEditStudant } from '../components/ModalEditStudant'
+import { ModalConfirmRemove } from '../components/ModalConfirmRemove'
 
 export type AddStudent = Omit<Student, 'id'>
 
 export function Dashboard() {
   const [students, setStudents] = useState<Student[]>([])
   const [editingStudent, setEditingStudent] = useState<Student>({} as Student)
+  const [selectedStudentRemove, setSelectedStudentRemove] = useState<Student>(
+    {} as Student
+  )
   const [modalOpenAddStudant, setOpenModalAddStudent] = useState(false)
   const [modalOpenEditStudant, setOpenModalEditStudent] = useState(false)
+  const [modalOpenDeleteStudant, setOpenModalDeletetudent] = useState(false)
 
   useEffect(() => {
     async function getStudents() {
@@ -25,7 +30,7 @@ export function Dashboard() {
     getStudents()
   }, [])
 
-  async function handleAddStudent(student: AddStudent) {
+  async function addStudent(student: AddStudent) {
     try {
       const response = await api.post('/students', student)
       setStudents([...students, response.data])
@@ -35,7 +40,7 @@ export function Dashboard() {
     }
   }
 
-  async function handleRemoveStudent(studentId: number) {
+  async function removeStudent(studentId: number) {
     try {
       const response = await api.delete(`students/${studentId}`)
       const updateStudent = [...students]
@@ -53,7 +58,7 @@ export function Dashboard() {
     }
   }
 
-  async function handleUpdateStudent(student: Student) {
+  async function updateStudent(student: Student) {
     try {
       const response = await api.put(`/students/${student.id}`, student)
 
@@ -67,6 +72,11 @@ export function Dashboard() {
     }
   }
 
+  async function handleRemoveStudent(student: Student) {
+    setSelectedStudentRemove(student)
+    setOpenModalDeletetudent(true)
+  }
+
   async function handleEditStudent(student: Student) {
     setEditingStudent(student)
     setOpenModalEditStudent(true)
@@ -78,6 +88,10 @@ export function Dashboard() {
 
   function toggleModalEdit() {
     setOpenModalEditStudent(!modalOpenEditStudant)
+  }
+
+  function toggleModalConfirm() {
+    setOpenModalDeletetudent(!modalOpenDeleteStudant)
   }
   //console.log(modalOpenEditStudant)
 
@@ -117,7 +131,7 @@ export function Dashboard() {
                 </button>
                 <button
                   className="btn btn-danger btn-sm w-100"
-                  onClick={() => handleRemoveStudent(student.id)}
+                  onClick={() => handleRemoveStudent(student)}
                 >
                   Excluir
                 </button>
@@ -130,14 +144,21 @@ export function Dashboard() {
       <ModalAddStudant
         isOpen={modalOpenAddStudant}
         setIsOpen={toggleModalAdd}
-        handleAddStudent={handleAddStudent}
+        addStudent={addStudent}
       />
 
       <ModalEditStudant
         isOpen={modalOpenEditStudant}
         setIsOpen={toggleModalEdit}
         editingStudent={editingStudent}
-        handleUpdateStudent={handleUpdateStudent}
+        updateStudent={updateStudent}
+      />
+
+      <ModalConfirmRemove
+        isOpen={modalOpenDeleteStudant}
+        setIsOpen={toggleModalConfirm}
+        selectedStudentRemove={selectedStudentRemove}
+        removeStudent={removeStudent}
       />
     </div>
   )

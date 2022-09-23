@@ -6,14 +6,14 @@ interface ModalEditStudantProps {
   isOpen: boolean
   setIsOpen: () => void
   editingStudent: Student
-  handleUpdateStudent: (studentEdit: Student) => void
+  updateStudent: (studentEdit: Student) => void
 }
 
 export function ModalEditStudant({
   isOpen,
   setIsOpen,
   editingStudent,
-  handleUpdateStudent
+  updateStudent
 }: ModalEditStudantProps) {
   const [id, setId] = useState(0)
   const [name, setName] = useState('')
@@ -30,11 +30,7 @@ export function ModalEditStudant({
   async function handleSubmit(event: FormEvent) {
     event.preventDefault()
     const newValuesStudent = { id, name, email, age }
-    handleUpdateStudent(newValuesStudent)
-    setIsOpen()
-  }
-
-  function handleClose() {
+    updateStudent(newValuesStudent)
     setIsOpen()
   }
 
@@ -86,13 +82,9 @@ export function ModalEditStudant({
 
         <ModalFooter>
           <button type="submit" className="btn btn-primary">
-            Incluir
+            Editar
           </button>
-          <button
-            type="button"
-            className="btn btn-danger"
-            onClick={handleClose}
-          >
+          <button type="button" className="btn btn-danger" onClick={setIsOpen}>
             Cancelar
           </button>
         </ModalFooter>
