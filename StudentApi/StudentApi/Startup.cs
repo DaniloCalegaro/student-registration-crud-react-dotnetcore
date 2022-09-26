@@ -13,7 +13,12 @@ class Startup {
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
         });
 
-        services.AddScoped<IStudentService, StudentsService>(); 
+        services.AddCors();
+        services.AddScoped<IStudentService, StudentsService>();
+
+        services.AddCors(options => options.AddPolicy("ApiCorsPolicy", builder => {
+            builder.WithOrigins("http://127.0.0.1:5173").AllowAnyMethod().AllowAnyHeader();
+        }));
 
         services.AddControllers();
         services.AddEndpointsApiExplorer();
@@ -31,11 +36,8 @@ class Startup {
         }
         
         //** Restringe apenas ao local da aplicação fronte end
-        app.UseCors(options => {
-            options.WithOrigins("http://localhost:5173"); 
-            options.AllowAnyMethod();
-            options.AllowAnyHeader();
-        });
+        app.UseCors("ApiCorsPolicy");
+       
         //**
 
         app.UseHttpsRedirection();
