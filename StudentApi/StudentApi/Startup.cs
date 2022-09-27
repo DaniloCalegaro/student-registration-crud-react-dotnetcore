@@ -13,12 +13,11 @@ class Startup {
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
         });
 
-        services.AddCors();
-        services.AddScoped<IStudentService, StudentsService>();
-
         services.AddCors(options => options.AddPolicy("ApiCorsPolicy", builder => {
             builder.WithOrigins("http://127.0.0.1:5173").AllowAnyMethod().AllowAnyHeader();
-        }));
+        })); // Restringe apenas ao local da aplicação fronte end
+
+        services.AddScoped<IStudentService, StudentsService>();
 
         services.AddControllers();
         services.AddEndpointsApiExplorer();
@@ -35,10 +34,9 @@ class Startup {
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "StudentsApi v1"));
         }
         
-        //** Restringe apenas ao local da aplicação fronte end
-        app.UseCors("ApiCorsPolicy");
-       
-        //**
+        
+        app.UseCors("ApiCorsPolicy"); // Restringe apenas ao local da aplicação fronte end
+
 
         app.UseHttpsRedirection();
         app.UseRouting();
