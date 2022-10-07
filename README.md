@@ -47,7 +47,7 @@ Este foi desenvolvido como um todo, o back end criado com Asp.net Core com Entit
 - Visual Studio 2022
 - Microsoft SQL Server 2019
 
-Para executar o projeto *local* utilizamos os comandos após realizar o download ou clone do repositório:
+Para executar o projeto *local* utilizamos as etapas abaixo após realizar o download ou clone do repositório:
 
 ### Inicialização da API
 
