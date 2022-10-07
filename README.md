@@ -59,7 +59,7 @@ Após iniciarmos o Visual Studio 2022, devemos seguir as seguintes etapas para e
   
 - Executar a aplicação com IIS Express
 
-Assim será montado nossa API e exibida uma página do SwaggerUI mostrado os endpoints disponíveis.
+Assim será montado nossa API e exibida uma página do SwaggerUI mostrando os endpoints disponíveis.
 
 ### Inicialização do Dashboard
 
